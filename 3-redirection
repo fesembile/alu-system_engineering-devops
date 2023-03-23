@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# redirection
+sudo apt-get update
+sudo apt-get install nginx -y
+
+
+sudo sed -i 's/# server_names_hash_bucket_size.*/server_names_hash_bucket_size 64;/' /etc/nginx/nginx.conf
+sudo sh -c "echo '
+server {
+    listen 80;
+    server_name localhost;
+    return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+}
+' > /etc/nginx/sites-available/redirect_me.conf"
+sudo ln -s /etc/nginx/sites-available/redirect_me.conf /etc/nginx/sites-enabled/
+sudo service nginx restart
