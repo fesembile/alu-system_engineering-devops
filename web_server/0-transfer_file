@@ -1,11 +1,23 @@
 #!/usr/bin/env bash
-# comment
-if [ $# -lt 4 ]; then
-    echo "Usage: 0-transfer_file PATH_TO_FILE IP USERNAME PATH_TO_SSH_KEY"
+
+# Check if 4 parameters are passed
+if [ "$#" -ne 4 ]; then
+    echo "Usage: $0 PATH_TO_FILE IP USERNAME PATH_TO_SSH_KEY"
+    exit 1
+fi
+
+# Assign parameter values to variables
+path_to_file=$1
+ip=$2
+username=$3
+path_to_ssh_key=$4
+
+# Transfer file using scp
+scp -o StrictHostKeyChecking=no -i $path_to_ssh_key $path_to_file $username@$ip:~/
+
+# Check if the file transfer was successful
+if [ "$?" -eq 0 ]; then
+    echo "File transfer successful!"
 else
-    file="$1"
-    host="$2"
-    username="$3"
-    private_key="$4"
-    scp -i "$private_key" -o StrictHostKeyChecking=no "$file" "$username@$host:~/"
+    echo "File transfer failed."
 fi
